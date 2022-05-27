@@ -1,7 +1,7 @@
 FROM debian:buster
 
 RUN apt-get update
-RUN apt-get upgrade
+RUN apt-get -y upgrade
 
 RUN apt-get install -y php7.3-fpm php7.3-mbstring php7.3-mysql php7.3-gd
 

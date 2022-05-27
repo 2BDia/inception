@@ -5,4 +5,3 @@ stop :
 	docker-compose -f srcs/docker-compose.yml down -v
 clean :
 	docker-compose -f srcs/docker-compose.yml rm
-~

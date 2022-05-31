@@ -1,63 +1,75 @@
-version: "3.7"
-services:
-
-  mariadb:
-    init: true
-    build:
-      context: ./requirements/mariadb
-    volumes:
-      - "db_volume:/var/lib/mysql/"
-    restart: always
-    networks:
-      - my-network
-    env_file:
-      - .env
-
-  wordpress:
-    init: true
-    build:
-      context: ./requirements/wordpress
-    volumes:
-      - "php_nginx_volume:/var/www/html/"
-    restart: always
-    networks:
-      - my-network
-    env_file:
-      - .env
-    depends_on: #Dependencies in Docker are used to make sure that a specific service is available before the dependent container starts
-      - mariadb
-
-  nginx:
-    init: true
-    build:
-      context: ./requirements/nginx
-    volumes:
-      - "php_nginx_volume:/var/www/html/"
-    restart: always
-    networks:
-      - my-network
-    ports:
-            #      - "8080:80"
-      - "443:443"
-    depends_on:
-      - wordpress
-      - mariadb
-    env_file:
-      - .env
-
-networks:
-  my-network:
+version: '3.7'
 
 volumes:
-  db_volume:
+  mariadb-volume:
     driver: local
     driver_opts:
-      type: none
+      device: /home/rvan-aud/data/database
+      type: volume
       o: bind
-      device: /home/rvan-aud/data/db_volume
-  php_nginx_volume:
+  wordpress-volume:
     driver: local
     driver_opts:
-      type: none
+      device: /home/rvan-aud/data/wordpress
+      type: volume
       o: bind
-      device: /home/rvan-aud/data/php_nginx_volume
+
+networks:
+  inception-network:
+
+services:
+  nginx:
+    container_name: nginx
+    build:
+      context: ./requirements/nginx
+    image: img_nginx
+    volumes:
+      - wordpress-volume:/var/www/wordpress
+    networks:
+      - inception-network
+    ports:
+      - "443:443"
+    restart: unless-stopped
+
+  mariadb:
+    container_name: mariadb
+    build:
+      context: ./requirements/mariadb
+    image: img_mariadb
+    volumes:
+      - mariadb-volume:/var/lib/mysql
+    networks:
+      - inception-network
+    environment:
+      - MARIADB_ROOT_PWD=${MARIADB_ROOT_PWD}
+      - MARIADB_DB=${MARIADB_DB}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PWD=${MARIADB_PWD}
+    restart: unless-stopped
+
+  wordpress:
+    container_name: wordpress
+    depends_on:
+      - mariadb
+    build:
+      context: ./requirements/wordpress
+    image: img_wordpress
+    volumes:
+      - wordpress-volume:/var/www/wordpress
+    networks:
+      - inception-network
+    environment: 
+      - WP_URL=${WP_URL}
+      - WP_DATABASE=${WP_DATABASE}
+      - WP_TITLE=${WP_TITLE}
+      - WP_ADMIN_USER=${WP_ADMIN_USER}
+      - WP_ADMIN_PWD=${WP_ADMIN_PWD}
+      - WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL}
+      - WP_USER=${WP_USER}
+      - WP_USER_PWD=${WP_USER_PWD}
+      - WP_USER_EMAIL=${WP_USER_EMAIL}
+      - MARIADB_HOST=${MARIADB_HOST}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PWD=${MARIADB_PWD}
+      - MARIADB_DB=${MARIADB_DB}
+    restart: unless-stopped

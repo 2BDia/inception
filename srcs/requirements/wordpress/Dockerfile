@@ -1,14 +1,31 @@
-FROM debian:buster
+FROM	alpine:3.14
 
-RUN apt-get update
-RUN apt-get -y upgrade
+# Update packet manager
+RUN		apk update
+# Download tools
+RUN		apk add --no-cache --quiet --update curl bash vim
+RUN		apk add --no-cache --quiet --update mariadb-client
+RUN		apk add --no-cache --quiet --update php7 php-phar \
+			php-json php-curl php-fpm php-mysqli php-iconv
 
-RUN apt-get install -y php7.3-fpm php7.3-mbstring php7.3-mysql php7.3-gd
+# Create wordpress directory
+RUN		mkdir -p /var/www/wordpress 
 
-COPY ./tools/php.ini		/etc/php/7.3/fpm
-COPY ./tools/php-fmp.conf	/etc/php/7.3/fpm
-COPY ./tools/www.conf 		/etc/php/7.3/fpm/pool.d
+# Download wordpress and add execution rights to the wp cli command
+RUN		curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+			--output /usr/bin/wp 
+RUN		chmod +x ./usr/bin/wp 
+RUN		wp core download --path=/var/www/wordpress
 
-EXPOSE 9000
-RUN mkdir -p /run/php
-CMD /usr/sbin/php-fpm7.3 --nodaemonize
+# Change workdir to wordpress dir
+WORKDIR /var/www/wordpress
+
+# Copy config file
+COPY	tools/wp-config /config/wp-config
+
+# Copy entrypoint script and add execution rights
+COPY	./scripts/entrypoint.sh /tmp/entrypoint.sh
+RUN		chmod +x /tmp/entrypoint.sh
+
+# Execute script with entrypoint to make sure it's never ignored
+ENTRYPOINT ["sh", "/tmp/entrypoint.sh"]

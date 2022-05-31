@@ -1,0 +1,17 @@
+network:host : networ host utilise le network de l'host alors qu'on veut créer un 
+	network spécifique pour les containers avec un port
+
+--link : on utiliserait link dans le cas où le port peut changer pour être sur de toujours
+	linker avec le port de mariadb par exemple, mais pas besoin, depends_on suffit
+
+tail -f : boucle infiniment pour être sur que le programme tourne
+
+ensure it runs no program in the background : --nodaemonize
+
+how docker and docker-compose work : ?
+
+difference between a docker image used with and without docker-compose : docker image =
+	Dockerfile, toutes les infos nécessaires pour setup le container, docker-compose sert à 
+	lancer tous les services dans un environnement isolé
+
+PORTABILITE

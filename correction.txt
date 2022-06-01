@@ -8,10 +8,20 @@ tail -f : boucle infiniment pour être sur que le programme tourne
 
 ensure it runs no program in the background : --nodaemonize
 
-how docker and docker-compose work : ?
+how docker and docker-compose work : docker va lancer des containers qui executeront des
+	services, et qui possèdent tout ce dont ils ont besoin grâce au Dockerfile. Docker-compose
+	est un outil pour lancer des applications docker avec plusieurs container, et c'est pratique
+	parce qu'avec une seule commande on peut facilement tout lancer ou tout arrêter, c'est un
+	peu le makefile des dockers
 
 difference between a docker image used with and without docker-compose : docker image =
 	Dockerfile, toutes les infos nécessaires pour setup le container, docker-compose sert à 
 	lancer tous les services dans un environnement isolé
 
-PORTABILITE
+benefit of docker compared to vms : docker est extremement portable, toutes les dépendances,
+	volumes et networks seront installés au lancement du container et l'utilisateur n'a besoin
+	de rien installer. Également plus léger qu'une vm car la vm va avoir son OS par dessus le host OS,
+	alors que le host OS va être partagé entre les containers.
+
+directory structure : bien organisé + chaque container est bien séparé
+

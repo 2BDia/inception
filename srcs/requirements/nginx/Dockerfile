@@ -14,7 +14,7 @@ RUN		mkdir -p /etc/nginx/ssl
 RUN 	openssl req -x509 -nodes \
 	-out /etc/nginx/ssl/rvan-aud.42.fr.crt \	
 	-keyout /etc/nginx/ssl/rvan-aud.42.fr.key \
-	-subj "/C=FR/ST=IDF/L=Paris/O=42/OU=42/CN=rvan-aud.42.fr/UID=rvan-aud"
+	-subj "/C=BE/ST=Belgium/L=Brussels/O=42/OU=19/CN=rvan-aud.42.fr/UID=rvan-aud"
 
 # Create directory for the nginx config files
 RUN 	mkdir -p /var/run/nginx

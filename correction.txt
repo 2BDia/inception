@@ -25,3 +25,10 @@ benefit of docker compared to vms : docker est extremement portable, toutes les 
 
 directory structure : bien organisé + chaque container est bien séparé
 
+
+login into the SQL database :	sudo docker ps
+								sudo docker exec -it <process> sh
+								mysql -u root -p
+								show databases;
+								use <databases>;
+								show tables;

@@ -40,11 +40,3 @@ fclean	:	clean
 			$(DOCKER) image prune --force
 
 re		:	fclean all
-
-# Demande dans la fiche de correction
-# correc	:
-# 			@ sudo docker stop $(docker ps -qa)
-# 			@ sudo docker rm $(docker ps -qa) 
-# 			@ sudo docker rmi -f $(docker images -qa)
-# 			@ sudo docker volume rm $(docker volume ls -q)
-# 			@ sudo docker network rm $(docker ls -q)
